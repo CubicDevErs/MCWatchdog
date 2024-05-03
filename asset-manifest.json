@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/mcwatchdog/static/css/main.5e82110e.css",
+    "main.js": "/mcwatchdog/static/js/main.ebc3d02b.js",
+    "index.html": "/mcwatchdog/index.html",
+    "main.5e82110e.css.map": "/mcwatchdog/static/css/main.5e82110e.css.map",
+    "main.ebc3d02b.js.map": "/mcwatchdog/static/js/main.ebc3d02b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5e82110e.css",
+    "static/js/main.ebc3d02b.js"
+  ]
+}
