@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/MCWatchdog/static/css/main.5e82110e.css",
-    "main.js": "/MCWatchdog/static/js/main.7e73cfdf.js",
-    "index.html": "/MCWatchdog/index.html",
-    "main.5e82110e.css.map": "/MCWatchdog/static/css/main.5e82110e.css.map",
-    "main.7e73cfdf.js.map": "/MCWatchdog/static/js/main.7e73cfdf.js.map"
+    "main.css": "/static/css/main.5e82110e.css",
+    "main.js": "/static/js/main.0f222264.js",
+    "index.html": "/index.html",
+    "main.5e82110e.css.map": "/static/css/main.5e82110e.css.map",
+    "main.0f222264.js.map": "/static/js/main.0f222264.js.map"
   },
   "entrypoints": [
     "static/css/main.5e82110e.css",
-    "static/js/main.7e73cfdf.js"
+    "static/js/main.0f222264.js"
   ]
 }
