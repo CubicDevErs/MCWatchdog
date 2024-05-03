@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "homepage": "http://cubicdevers.github.io/mcwatchdog",
+  "homepage": "http://cubicdevers.github.io/MCWatchdog",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
