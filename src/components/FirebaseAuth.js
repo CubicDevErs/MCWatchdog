@@ -13,7 +13,7 @@ export const initializeFirebaseUI = (containerId) => {
 
   console.log("Starting FirebaseUI...");
   ui.start(containerId, {
-    signInSuccessUrl: "/dashboard",
+    signInSuccessUrl: "/#/dashboard",
     signInOptions: [
       {
         provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
