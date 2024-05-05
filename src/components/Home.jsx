@@ -6,7 +6,7 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 import InstructionModal from "./home_modals/InstructionModal";
-import { FaAndroid, FaApple, FaPaypal } from "react-icons/fa";
+import { FaAndroid, FaApple } from "react-icons/fa";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export default function Home() {
             <div className="hero-img">
               <img
                 src="/statusdog.jpeg"
-                alt="Hero Image"
+                alt="banner image no info"
                 className="img-fluid"
               />
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Col, Row, Card, Button } from "react-bootstrap";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { app } from "../Firebase";
@@ -24,6 +24,13 @@ export default function Dashboard() {
   const handleSettingShow = () => setShowSettingsModal(true);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+
+  const shouldFetchUserInfo = useCallback(() => {
+    if (!lastFetchTime) return true;
+    const currentTime = new Date().getTime();
+    const fiveMinutesInMillis = 5 * 60 * 1000;
+    return currentTime - lastFetchTime > fiveMinutesInMillis;
+  }, [lastFetchTime]);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -70,14 +77,7 @@ export default function Dashboard() {
     return () => {
       unsubscribe();
     };
-  }, []);
-
-  const shouldFetchUserInfo = () => {
-    if (!lastFetchTime) return true;
-    const currentTime = new Date().getTime();
-    const fiveMinutesInMillis = 5 * 60 * 1000;
-    return currentTime - lastFetchTime > fiveMinutesInMillis;
-  };
+  }, [navigate, shouldFetchUserInfo]);
 
   const getUserInfo = async (firebaseUser) => {
     try {
