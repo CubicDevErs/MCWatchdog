@@ -82,7 +82,7 @@ const UpgradeAccountModal = ({ showModal, handleClose }) => {
             "MCWatchdog Tier",
             "Server Tier and Discord Tier combined.",
             4.0,
-            "price_1P9cxCFQiXzTDa0RE1pimrDU"
+            "price_1P9duwFQiXzTDa0R4EQPvJf5"
           )}
         </Row>
       </Modal.Body>
