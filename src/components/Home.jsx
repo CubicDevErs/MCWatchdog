@@ -56,7 +56,7 @@ export default function Home() {
             <div className="hero-img">
               <img
                 src="/statusdog.jpeg"
-                alt="banner image no info"
+                alt="banner no info doggy"
                 className="img-fluid"
               />
             </div>

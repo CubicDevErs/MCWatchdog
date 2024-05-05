@@ -138,7 +138,7 @@ export default function Dashboard() {
     e.preventDefault();
     try {
       const encodedFavicon = encodeURIComponent(formData.serverFavicon);
-      const response = await axios.post(
+      await axios.post(
         `${host}/api/discord/server/add/${user.email}/${formData.guildId}/${formData.serverName}/${formData.serverAddress}/${formData.serverPort}/${formData.serverPlatform}/${encodedFavicon}/${formData.enableNotifications}`,
         {},
         {
@@ -180,7 +180,7 @@ export default function Dashboard() {
     try {
       const encodedFavicon = encodeURIComponent(formData.serverFavicon);
 
-      const response = await axios.post(
+      await axios.post(
         `${host}/api/discord/server/edit/${user.email}/${currentServer.guildId}/${currentServer.name}/${formData.serverName}/${formData.serverAddress}/${formData.serverPort}/${formData.serverPlatform}/${encodedFavicon}/${formData.enableNotifications}`,
         {},
         {
@@ -277,7 +277,7 @@ export default function Dashboard() {
         return;
       }
 
-      const response = await axios.post(
+      await axios.post(
         `${host}/api/discord/server/status/enable/${user.email}/${formData.guildId}/${formData.serverName}/${selectedChannel.id}`,
         {},
         {
