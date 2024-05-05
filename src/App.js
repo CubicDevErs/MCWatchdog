@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -13,7 +13,7 @@ import Checkout from "./components/Checkout"
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Navigate replace to="/home" />} />
         <Route path="/home" element={<Home />} />
@@ -22,10 +22,10 @@ function App() {
         <Route path="/discordtracker" element={<Discordtracker />} />
         <Route path="/tos" element={<TOS />} />
         <Route path="/policy" element={<Policy />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="checkout" element={<Checkout />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
