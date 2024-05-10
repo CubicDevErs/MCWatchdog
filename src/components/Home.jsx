@@ -82,7 +82,7 @@ export default function Home() {
             </Col>
             <Col md={6} className="text-center">
               <div className="section">
-                <FaApple size={48} color="blue" />
+                <FaApple size={48} color="white" />
                 <h2>Watchdog for iOS</h2>
                 <Button variant="secondary" onClick={handleShow}>
                   Install instructions
