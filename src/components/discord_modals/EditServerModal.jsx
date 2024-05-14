@@ -23,6 +23,7 @@ const EditServerModal = ({
               name="serverName"
               value={formData.serverName}
               onChange={handleInputChange}
+              required
             />
           </Form.Group>
           <Form.Group controlId="editServerAddress">
@@ -32,6 +33,7 @@ const EditServerModal = ({
               name="serverAddress"
               value={formData.serverAddress}
               onChange={handleInputChange}
+              required
             />
           </Form.Group>
           <Form.Group controlId="editServerPort">
@@ -41,6 +43,7 @@ const EditServerModal = ({
               name="serverPort"
               value={formData.serverPort}
               onChange={handleInputChange}
+              required
             />
           </Form.Group>
           <Form.Group controlId="editServerPlatform">
@@ -50,6 +53,7 @@ const EditServerModal = ({
               name="serverPlatform"
               value={formData.serverPlatform}
               onChange={handleInputChange}
+              required
             >
               <option value="java">Java</option>
               <option value="bedrock">Bedrock</option>
@@ -62,6 +66,8 @@ const EditServerModal = ({
               name="serverFavicon"
               value={formData.serverFavicon}
               onChange={handleInputChange}
+              placeholder="https://packpng.com/static/pack.png"
+              required
             />
           </Form.Group>
           <Form.Group controlId="editEnableNotifications">
@@ -71,6 +77,7 @@ const EditServerModal = ({
               name="enableNotifications"
               value={formData.enableNotifications}
               onChange={handleInputChange}
+              required
             >
               <option value={true}>Enable</option>
               <option value={false}>Disable</option>

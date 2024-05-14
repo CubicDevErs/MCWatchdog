@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Alert, ProgressBar } from "react-bootstrap";
 import axios from "axios";
 import { app } from "../Firebase";
 import CustomNavbar from "./Navbar";
@@ -32,6 +32,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [currentServer, setCurrentServer] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
@@ -58,7 +59,7 @@ export default function Dashboard() {
             if (response.data.success) {
               setIsDiscordLinked(response.data.isDiscordLinked);
               if (response.data.isDiscordLinked) {
-                loadGuilds(firebaseUser.email);
+                await loadGuilds(firebaseUser.email);
               }
             } else {
               console.error(
@@ -68,6 +69,8 @@ export default function Dashboard() {
             }
           } catch (error) {
             console.error("Error fetching Discord link status:", error);
+          } finally {
+            setLoading(false);
           }
         }
       }
@@ -300,172 +303,179 @@ export default function Dashboard() {
     <>
       <CustomNavbar user={user} />
       <Container className="mt-5">
-        {error && <Alert variant="danger">{error}</Alert>}
-        {success && <Alert variant="success">{success}</Alert>}
-        <Row className="justify-content-center">
-          <Col md={6} className="text-center">
-            <h1>Discord status dashboard</h1>
-            {isDiscordLinked === true ? (
-              <>
-                <p>Discord linked</p>
-                {guilds.length > 0 ? (
-                  guilds.map((guild) => (
-                    <Card key={guild.id} className="mb-3 guild-card">
-                      <Card.Body>
-                        <Card.Title>{guild.name}</Card.Title>
-                        {guild.servers.length > 0 ? (
-                          guild.servers.map((server) => (
-                            <Card
-                              key={server.name}
-                              className="mb-2 server-card"
-                            >
-                              <Card.Body>
-                                <Card.Title>{server.name}</Card.Title>
-                                <br />
-                                {server.Favicon ? (
-                                  <img
-                                    src={server.Favicon}
-                                    alt="Server Favicon"
-                                    style={{
-                                      width: "60px",
-                                      height: "60px",
-                                      borderRadius: "50%",
-                                    }}
-                                  />
-                                ) : (
-                                  <span>No favicon available</span>
-                                )}
-                                <div className="server-card-text">
-                                  <div className="status">
-                                    <strong>Address:</strong>
+        {loading ? (
+          <ProgressBar animated now={100} variant="info" />
+
+        ) : (
+          <>
+            {error && <Alert variant="danger">{error}</Alert>}
+            {success && <Alert variant="success">{success}</Alert>}
+            <Row className="justify-content-center">
+              <Col md={6} className="text-center">
+                <h1>Discord status dashboard</h1>
+                {isDiscordLinked === true ? (
+                  <>
+                    <p>Discord linked</p>
+                    {guilds.length > 0 ? (
+                      guilds.map((guild) => (
+                        <Card key={guild.id} className="mb-3 guild-card">
+                          <Card.Body>
+                            <Card.Title>{guild.name}</Card.Title>
+                            {guild.servers.length > 0 ? (
+                              guild.servers.map((server) => (
+                                <Card
+                                  key={server.name}
+                                  className="mb-2 server-card"
+                                >
+                                  <Card.Body>
+                                    <Card.Title>{server.name}</Card.Title>
                                     <br />
-                                    {server.IP}
-                                    <br />
-                                  </div>
-                                  <div className="status">
-                                    <strong>Port:</strong>
-                                    <br />
-                                    {server.Port}
-                                    <br />
-                                  </div>
-                                  <div className="status">
-                                    <strong>Platform:</strong>
-                                    <br />
-                                    {server.Platform}
-                                    <br />
-                                  </div>
-                                  <div className="status">
-                                    <strong>Notification:</strong>
-                                    <br />
-                                    {server.Notification
-                                      ? "Enabled"
-                                      : "Disabled"}
-                                    <br />
-                                  </div>
-                                  <div className="status">
-                                    <strong>Discord status:</strong>
-                                    <br />
-                                    {server.Tracking ? "Enabled" : "Disabled"}
-                                    <br />
-                                  </div>
-                                </div>
-                                <br />
-                                <div className="dropdown">
-                                  <button
-                                    className="btn btn-secondary dropdown-toggle"
-                                    type="button"
-                                    id={`dropdownMenuButton-${server.name}`}
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                  >
-                                    Actions
-                                  </button>
-                                  <ul
-                                    className="dropdown-menu"
-                                    aria-labelledby={`dropdownMenuButton-${server.name}`}
-                                  >
-                                    {server.Tracking ? (
-                                      <li>
-                                        <button
-                                          className="dropdown-item"
-                                          onClick={() =>
-                                            handleDisableStatusButtonClick(
-                                              guild.id,
-                                              server.name
-                                            )
-                                          }
-                                        >
-                                          Disable Discord Status
-                                        </button>
-                                      </li>
+                                    {server.Favicon ? (
+                                      <img
+                                        src={server.Favicon}
+                                        alt="Server Favicon"
+                                        style={{
+                                          width: "60px",
+                                          height: "60px",
+                                          borderRadius: "50%",
+                                        }}
+                                      />
                                     ) : (
-                                      <li>
-                                        <button
-                                          className="dropdown-item"
-                                          onClick={() =>
-                                            handleEnableStatusButtonClick(
-                                              guild.id,
-                                              server.name
-                                            )
-                                          }
-                                        >
-                                          Enable Discord Status
-                                        </button>
-                                      </li>
+                                      <span>No favicon available</span>
                                     )}
-                                    <li>
+                                    <div className="server-card-text">
+                                      <div className="status">
+                                        <strong>Address:</strong>
+                                        <br />
+                                        {server.IP}
+                                        <br />
+                                      </div>
+                                      <div className="status">
+                                        <strong>Port:</strong>
+                                        <br />
+                                        {server.Port}
+                                        <br />
+                                      </div>
+                                      <div className="status">
+                                        <strong>Platform:</strong>
+                                        <br />
+                                        {server.Platform}
+                                        <br />
+                                      </div>
+                                      <div className="status">
+                                        <strong>Notification:</strong>
+                                        <br />
+                                        {server.Notification
+                                          ? "Enabled"
+                                          : "Disabled"}
+                                        <br />
+                                      </div>
+                                      <div className="status">
+                                        <strong>Discord status:</strong>
+                                        <br />
+                                        {server.Tracking ? "Enabled" : "Disabled"}
+                                        <br />
+                                      </div>
+                                    </div>
+                                    <br />
+                                    <div className="dropdown">
                                       <button
-                                        className="dropdown-item"
-                                        onClick={() =>
-                                          handleEdit(guild.id, server)
-                                        }
+                                        className="btn btn-secondary dropdown-toggle"
+                                        type="button"
+                                        id={`dropdownMenuButton-${server.name}`}
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
                                       >
-                                        Edit Server
+                                        Actions
                                       </button>
-                                    </li>
-                                    <li>
-                                      <button
-                                        className="dropdown-item"
-                                        onClick={() =>
-                                          handleDelete(guild.id, server.name)
-                                        }
+                                      <ul
+                                        className="dropdown-menu"
+                                        aria-labelledby={`dropdownMenuButton-${server.name}`}
                                       >
-                                        Delete Server
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </Card.Body>
-                            </Card>
-                          ))
-                        ) : (
-                          <p>No servers found for this guild.</p>
-                        )}
-                        <Button
-                          variant="primary"
-                          onClick={() => {
-                            setShowModal(true);
-                            setFormData({ ...formData, guildId: guild.id });
-                          }}
-                        >
-                          Add Server
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  ))
+                                        {server.Tracking ? (
+                                          <li>
+                                            <button
+                                              className="dropdown-item"
+                                              onClick={() =>
+                                                handleDisableStatusButtonClick(
+                                                  guild.id,
+                                                  server.name
+                                                )
+                                              }
+                                            >
+                                              Disable Discord Status
+                                            </button>
+                                          </li>
+                                        ) : (
+                                          <li>
+                                            <button
+                                              className="dropdown-item"
+                                              onClick={() =>
+                                                handleEnableStatusButtonClick(
+                                                  guild.id,
+                                                  server.name
+                                                )
+                                              }
+                                            >
+                                              Enable Discord Status
+                                            </button>
+                                          </li>
+                                        )}
+                                        <li>
+                                          <button
+                                            className="dropdown-item"
+                                            onClick={() =>
+                                              handleEdit(guild.id, server)
+                                            }
+                                          >
+                                            Edit Server
+                                          </button>
+                                        </li>
+                                        <li>
+                                          <button
+                                            className="dropdown-item"
+                                            onClick={() =>
+                                              handleDelete(guild.id, server.name)
+                                            }
+                                          >
+                                            Delete Server
+                                          </button>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </Card.Body>
+                                </Card>
+                              ))
+                            ) : (
+                              <p>No servers found for this guild.</p>
+                            )}
+                            <Button
+                              variant="primary"
+                              onClick={() => {
+                                setShowModal(true);
+                                setFormData({ ...formData, guildId: guild.id });
+                              }}
+                            >
+                              Add Server
+                            </Button>
+                          </Card.Body>
+                        </Card>
+                      ))
+                    ) : (
+                      <p>You haven't yet invited the bot on a Discord guild.</p>
+                    )}
+                  </>
+                ) : isDiscordLinked === false ? (
+                  <Button variant="success" onClick={openDiscordAuthPopup}>
+                    Link Discord
+                  </Button>
                 ) : (
-                  <p>You haven't yet invited the bot on a Discord guild.</p>
+                  <p>Checking Discord account status...</p>
                 )}
-              </>
-            ) : isDiscordLinked === false ? (
-              <Button variant="success" onClick={openDiscordAuthPopup}>
-                Link Discord
-              </Button>
-            ) : (
-              <p>Checking Discord account status...</p>
-            )}
-          </Col>
-        </Row>
+              </Col>
+            </Row>
+          </>
+        )}
       </Container>
       <Footer />
       <AddServerModal
