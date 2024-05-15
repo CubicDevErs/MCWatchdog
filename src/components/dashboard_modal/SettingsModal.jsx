@@ -59,15 +59,6 @@ const SettingsModal = ({ showModal, handleClose }) => {
 
   const confirmDeleteAccount = async () => {
     try {
-      await axios.post(
-        `${host}/payment/cancel-subscription/${storedUser.email}`,
-        {},
-        {
-          headers: {
-            Authorization: storedUser.uid,
-          },
-        }
-      );
       const response = await axios.delete(
         `${host}/api/user/delete/${storedUser.email}`,
         {

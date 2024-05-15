@@ -267,19 +267,19 @@ export default function Dashboard() {
 
   const handleEnableStatusSubmit = async (e) => {
     const storedUser = JSON.parse(sessionStorage.getItem("user"));
-
+  
     e.preventDefault();
     try {
       const selectedChannelId = formData.discordChannel;
       const selectedChannel = discordChannels.find(
         (channel) => channel.id === selectedChannelId
       );
-
+  
       if (!selectedChannel) {
         setError("Please select a channel.");
         return;
       }
-
+  
       await axios.post(
         `${host}/api/discord/server/status/enable/${user.email}/${formData.guildId}/${formData.serverName}/${selectedChannel.id}`,
         {},
@@ -289,16 +289,22 @@ export default function Dashboard() {
           },
         }
       );
-
+  
       setSuccess("Discord status enabled successfully.");
       setShowEnableStatusModal(false);
+      setFormData({ ...formData, discordChannel: "" });
       loadGuilds(user.email);
     } catch (error) {
       console.error("Error enabling Discord status:", error);
-      setError("An error occurred while enabling Discord status.");
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError("An error occurred while enabling Discord status.");
+      }
+      setShowEnableStatusModal(false);
     }
-  };
-
+  };  
+  
   return (
     <>
       <CustomNavbar user={user} />

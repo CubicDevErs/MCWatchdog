@@ -13,7 +13,7 @@ const EnableStatusModal = ({
   return (
     <Modal
       show={showEnableStatusModal}
-      onHide={() => setShowEnableStatusModal(false)}
+      onHide={handleClose}
     >
       <Modal.Header closeButton>
         <Modal.Title style={{ color: "white" }}>
