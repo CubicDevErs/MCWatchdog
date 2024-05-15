@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button, Alert, ProgressBar } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Alert, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { app } from "../Firebase";
 import CustomNavbar from "./Navbar";
@@ -303,16 +303,23 @@ export default function Dashboard() {
     <>
       <CustomNavbar user={user} />
       <Container className="mt-5">
+        <Row className="justify-content-center">
+          <Col md={6} className="text-center">
+            <h1>Discord tracker dashboard</h1>
+          </Col>
+        </Row>
         {loading ? (
-          <ProgressBar animated now={100} variant="info" />
-
+          <div className="text-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
         ) : (
           <>
             {error && <Alert variant="danger">{error}</Alert>}
             {success && <Alert variant="success">{success}</Alert>}
             <Row className="justify-content-center">
               <Col md={6} className="text-center">
-                <h1>Discord status dashboard</h1>
                 {isDiscordLinked === true ? (
                   <>
                     <p>Discord linked</p>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Button, Card, Alert } from "react-bootstrap";
+import { Container, Row, Col, Button, Card, Alert, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { app } from "../Firebase";
 import CustomNavbar from "./Navbar";
@@ -11,6 +11,7 @@ import AddServerModal from "./server_modals/AddServerModal";
 export default function Dashboard() {
   const host = "https://backend.mcwatchdog.com";
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); 
   const [user, setUser] = useState(null);
   const [servers, setServers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -69,6 +70,7 @@ export default function Dashboard() {
   }, [user]);
 
   const loadServerStatuses = async (email) => {
+    setLoading(true);
     const storedUser = JSON.parse(sessionStorage.getItem("user"));
     try {
       const response = await axios.get(`${host}/api/servers/get/${email}`, {
@@ -79,6 +81,17 @@ export default function Dashboard() {
       setServers(response.data.servers);
     } catch (error) {
       console.error("Error loading server statuses:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("An error occurred while loading server statuses.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,8 +166,28 @@ export default function Dashboard() {
 
   return (
     <div>
-      <CustomNavbar user={user} />
+<CustomNavbar user={user} />
       <Container className="mt-5">
+      <Row className="justify-content-center">
+        <Col md={12} className="text-center">
+          <h1>Server tracker dashboard</h1>
+          <Button
+            variant="primary"
+            className="ml-2"
+            onClick={() => setShowModal(true)}
+          >
+            Add Server
+          </Button>
+          <div>Refresh status: {timer}</div>
+        </Col>
+      </Row>
+        {loading && (
+          <div className="text-center mb-3">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
         {errorMessage && (
           <Alert
             variant="danger"
@@ -164,21 +197,6 @@ export default function Dashboard() {
             {errorMessage}
           </Alert>
         )}
-
-        <Row className="justify-content-center">
-          <Col md={12} className="text-center">
-            <h1>Server status dashboard</h1>
-            <Button
-              variant="primary"
-              className="ml-2"
-              onClick={() => setShowModal(true)}
-            >
-              Add Server
-            </Button>
-            <div>Refresh status: {timer}</div>
-          </Col>
-        </Row>
-
         <Row className="mt-4">
           {servers.map((server, index) => (
             <Col key={index} md={4} className="mb-4">
