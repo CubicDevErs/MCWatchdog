@@ -21,7 +21,8 @@ export const initializeFirebaseUI = (containerId) => {
           "606031045534-74p4nprdtduh06gtgqkf1b8n411cg9s1.apps.googleusercontent.com",
       },
     ],
-    credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
+    credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+    signInFlow: 'popup',
     callbacks: {
       signInSuccessWithAuthResult: function (authResult, redirectUrl) {
         console.log("Sign-in successful!");
