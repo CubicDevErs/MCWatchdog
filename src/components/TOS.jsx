@@ -8,8 +8,6 @@ export default function TermsOfService() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log("Effect triggered");
-
     const auth = getAuth();
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -22,7 +20,6 @@ export default function TermsOfService() {
     });
 
     return () => {
-      console.log("Cleanup function");
       unsubscribe();
     };
   }, []);

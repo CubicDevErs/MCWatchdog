@@ -15,7 +15,6 @@ import axios from "axios";
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const [lastFetchTime, setLastFetchTime] = useState(null);
   const navigate = useNavigate();
   const host = "https://backend.mcwatchdog.com";
   const [showModal, setShowModal] = useState(false);
@@ -25,21 +24,14 @@ export default function Dashboard() {
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  const shouldFetchUserInfo = useCallback(() => {
-    if (!lastFetchTime) return true;
-    const currentTime = new Date().getTime();
-    const fiveMinutesInMillis = 5 * 60 * 1000;
-    return currentTime - lastFetchTime > fiveMinutesInMillis;
-  }, [lastFetchTime]);
-
   useEffect(() => {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (!firebaseUser.emailVerified) {
+        navigate("/verified");
+        return;
+      }
       if (firebaseUser) {
-        if (!firebaseUser.emailVerified) {
-          navigate("/verified");
-          return;
-        }
         setUser(firebaseUser);
         const storedUser = JSON.parse(sessionStorage.getItem("user"));
 
@@ -48,16 +40,10 @@ export default function Dashboard() {
           sessionStorage.setItem("user", JSON.stringify(firebaseUser));
         }
 
+        getUserInfo(firebaseUser);
+
         if (firebaseUser && typeof window.Android !== "undefined") {
           window.Android.getFirebase(JSON.stringify(firebaseUser));
-        }
-
-        if (!storedUser || storedUser.uid === null) {
-          sendUserDataToBackend(firebaseUser);
-        }
-
-        if (shouldFetchUserInfo()) {
-          getUserInfo(firebaseUser);
         }
 
         if ("Notification" in window && Notification.permission === "granted") {
@@ -81,7 +67,7 @@ export default function Dashboard() {
     return () => {
       unsubscribe();
     };
-  }, [navigate, shouldFetchUserInfo]);
+  }, [navigate]);
 
   const getUserInfo = async (firebaseUser) => {
     try {
@@ -96,7 +82,6 @@ export default function Dashboard() {
 
       setUserInfo(response.data.userInfo);
       localStorage.setItem("userInfo", JSON.stringify(response.data.userInfo));
-      setLastFetchTime(new Date().getTime());
     } catch (error) {
       console.error("Error fetching user info:", error);
     }

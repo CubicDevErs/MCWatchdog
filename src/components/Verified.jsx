@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Container, Card, } from "react-bootstrap";
 import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 
@@ -13,7 +13,6 @@ export default function Verified() {
     const auth = getAuth();
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      console.log("Auth state changed:", firebaseUser);
       if (firebaseUser) {
         if (firebaseUser.emailVerified) {
           navigate("/dashboard");
@@ -21,7 +20,7 @@ export default function Verified() {
         }
         setUser(firebaseUser);
       } else {
-        setUser(null);
+        navigate("/home");
       }
     });
 
@@ -30,7 +29,7 @@ export default function Verified() {
     };
   }, [navigate]);
 
-  // Check email verification status every 5 seconds
+
   useEffect(() => {
     const interval = setInterval(() => {
       const auth = getAuth();
@@ -47,18 +46,18 @@ export default function Verified() {
   return (
     <div>
       <CustomNavbar user={user} />
-      <Container className="mt-5 text-start">
-        {user ? (
-          <div>
-            <h3>Email Verification Needed</h3>
-            <p>
+      <Container className="mt-5 d-flex justify-content-center align-items-center">
+        <Card className="info-block card" >
+          <Card.Body className="text-center">
+            <Card.Title style={{ color: "white" }} >
+              Email Verification Needed
+            </Card.Title>
+            <Card.Text>
               Your email is not verified yet. Please check your email for a verification link.
               Once you verify your email, this page will refresh and you will be redirected to your dashboard.
-            </p>
-          </div>
-        ) : (
-          <p>No user is logged in.</p>
-        )}
+            </Card.Text>
+          </Card.Body>
+        </Card>
       </Container>
       <Footer />
     </div>

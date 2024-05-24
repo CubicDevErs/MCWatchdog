@@ -7,11 +7,8 @@ import { app } from "../Firebase";
 export const initializeFirebaseUI = (containerId) => {
   console.log("Initializing FirebaseUI...");
 
-  const ui =
-    firebaseui.auth.AuthUI.getInstance() ||
-    new firebaseui.auth.AuthUI(getAuth(app));
-
-  console.log("Starting FirebaseUI...");
+  const auth = getAuth(app);
+  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
 
   ui.start(containerId, {
     signInSuccessUrl: "/#/dashboard",
@@ -30,33 +27,25 @@ export const initializeFirebaseUI = (containerId) => {
     signInFlow: "popup",
     callbacks: {
       signInSuccessWithAuthResult: async function (authResult, redirectUrl) {
-        console.log("Sign-in successful!");
 
         const user = authResult.user;
-        if (user.emailVerified === false) {
+        if (!user.emailVerified) {
           try {
             await sendEmailVerification(user);
-            alert('Verification email sent! Please check your inbox.');
           } catch (error) {
             console.error("Error sending email verification:", error);
           }
         }
-
-        if (user.emailVerified) {
-          return true; 
-        } else {
-          alert('Please verify your email before proceeding.');
-          return false;
-        }
+        return true; 
       },
       signInFailure: function (error) {
         console.error("Sign-in failure:", error);
-        return handleSignInFailure(error);
+        handleSignInFailure(error);
       },
     },
   });
 
-  ui.disableAutoSignIn();
+  ui.disableAutoSignIn(); 
 };
 
 function handleSignInFailure(error) {
