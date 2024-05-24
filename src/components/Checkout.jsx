@@ -21,6 +21,10 @@ export default function Checkout() {
         if (!firebaseUser) {
           navigate("/login");
         } else {
+          if (!firebaseUser.emailVerified) {
+            navigate("/verified");
+            return;
+          }
           setUser(firebaseUser);
           try {
             const response = await axios.get(

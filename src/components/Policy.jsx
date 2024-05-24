@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 
-export default function TermsOfService() {
+export default function Policy() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {

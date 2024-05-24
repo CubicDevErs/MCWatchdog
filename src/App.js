@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Dashboard from "./components/Dashboard";
 import Checkout from "./components/Checkout"
+import Verified from "./components/Verified"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/policy" element={<Policy />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/verified" element={<Verified />} />
       </Routes>
     </HashRouter>
   );

@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, sendEmailVerification } from "firebase/auth";
 import firebase from "firebase/compat/app";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
@@ -13,11 +13,6 @@ export const initializeFirebaseUI = (containerId) => {
 
   console.log("Starting FirebaseUI...");
 
-  const actionCodeSettings = {
-    url: "https://mcwatchdog.com",
-    handleCodeInApp: true,
-  };
-
   ui.start(containerId, {
     signInSuccessUrl: "/#/dashboard",
     signInOptions: [
@@ -27,17 +22,32 @@ export const initializeFirebaseUI = (containerId) => {
       },
       {
         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
         requireDisplayName: true,
-        actionCodeSettings: actionCodeSettings,
+        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
       },
     ],
     credentialHelper: firebaseui.auth.CredentialHelper.NONE,
     signInFlow: "popup",
     callbacks: {
-      signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+      signInSuccessWithAuthResult: async function (authResult, redirectUrl) {
         console.log("Sign-in successful!");
-        return true;
+
+        const user = authResult.user;
+        if (user.emailVerified === false) {
+          try {
+            await sendEmailVerification(user);
+            alert('Verification email sent! Please check your inbox.');
+          } catch (error) {
+            console.error("Error sending email verification:", error);
+          }
+        }
+
+        if (user.emailVerified) {
+          return true; 
+        } else {
+          alert('Please verify your email before proceeding.');
+          return false;
+        }
       },
       signInFailure: function (error) {
         console.error("Sign-in failure:", error);

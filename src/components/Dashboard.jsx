@@ -36,6 +36,10 @@ export default function Dashboard() {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
+        if (!firebaseUser.emailVerified) {
+          navigate("/verified");
+          return;
+        }
         setUser(firebaseUser);
         const storedUser = JSON.parse(sessionStorage.getItem("user"));
 

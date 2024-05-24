@@ -30,6 +30,10 @@ export default function Dashboard() {
       if (!firebaseUser) {
         navigate("/login");
       } else {
+        if (!firebaseUser.emailVerified) {
+          navigate("/verified");
+          return;
+        }
         const storedUser = JSON.parse(sessionStorage.getItem("user"));
         if (!storedUser || storedUser.uid === null) {
           navigate("/dashboard");
