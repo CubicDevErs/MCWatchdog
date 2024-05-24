@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, ActionCodeSettings } from "firebase/auth";
 import firebase from "firebase/compat/app";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
@@ -12,6 +12,12 @@ export const initializeFirebaseUI = (containerId) => {
     new firebaseui.auth.AuthUI(getAuth(app));
 
   console.log("Starting FirebaseUI...");
+
+  const actionCodeSettings = {
+    url: "https://mcwatchdog.com",
+    handleCodeInApp: true,
+  };
+
   ui.start(containerId, {
     signInSuccessUrl: "/#/dashboard",
     signInOptions: [
@@ -23,10 +29,11 @@ export const initializeFirebaseUI = (containerId) => {
         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
         signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
         requireDisplayName: true,
-      }
+        actionCodeSettings: actionCodeSettings,
+      },
     ],
     credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-    signInFlow: 'popup',
+    signInFlow: "popup",
     callbacks: {
       signInSuccessWithAuthResult: function (authResult, redirectUrl) {
         console.log("Sign-in successful!");
@@ -43,7 +50,7 @@ export const initializeFirebaseUI = (containerId) => {
 };
 
 function handleSignInFailure(error) {
-  if (error.code === 'firebaseui/anonymous-upgrade-merge-conflict') {
+  if (error.code === "firebaseui/anonymous-upgrade-merge-conflict") {
     console.log("Merge conflict error:", error);
   } else {
     console.log("Error during sign-in:", error);
