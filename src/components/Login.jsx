@@ -20,7 +20,7 @@ export default function Login() {
         <Row className="justify-content-center">
           <Col md={6} className="text-center p-5 border rounded">
             <h1>Login</h1>
-            <p className="mt-4">Sign in using your Google account:</p>
+            <p className="mt-4">Sign in using your Google account or email and password:</p>
             <div id="firebaseui-auth-container" className="mt-4"></div>
           </Col>
         </Row>
