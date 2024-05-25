@@ -353,44 +353,67 @@ export default function Dashboard() {
             </Row>
             <Row className="mt-3">
               <Col md={6}>
-                <Card className="info-block">
+                <Card className="info-block text-start">
                   <Card.Body>
-                    <Card.Title className="text-white">
+                    <Card.Title className="text-white" style={{ color: "white", textAlign: "center" }}>
                       Setup server trackers
                     </Card.Title>
-                    <Card.Text>
-                      Login into MCWatchdog and navigate to the server tracker
-                      section, simply add your server into the panel and we do
-                      everything else.
+                    <Card.Text as="div">
+                      <ol>
+                      <br />
+                        <li className="text-white">
+                          Navigate to Server Tracker click on add server.
+                        </li>
+                        <br />
+                        <li className="text-white">
+                         For single minecraft server you can use your domain/IP + port.
+                         We also support query ping port.
+                        </li>
+                        <br />
+                        <li className="text-white">
+                          For proxy setups we recommend to open the query port, with this you can track all your backend servers.
+                        </li>
+                        <br />
+                        <li className="text-white">
+                          Our system will automatically push a notification to all clients where mcwatchdog was opened.
+                          To deactivate notifications you can simply disable them on your browser or app settings.
+                        </li>
+                      </ol>
                     </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
               <Col md={6}>
-                <Card className="info-block">
+                <Card className="info-block text-start">
                   <Card.Body>
-                    <Card.Title className="text-white">
+                    <Card.Title className="text-white" style={{ color: "white", textAlign: "center" }}>
                       Setup Discord trackers
                     </Card.Title>
                     <Card.Text as="div">
                       <ol>
+                      <br />
                         <li className="text-white">
                           Login to MCWatchdog and click "Link Discord".
                         </li>
+                        <br />
                         <li className="text-white">
                           Link your Discord account to MCWatchdog. Use{" "}
                           <code>/link</code> if you've already invited the bot.
                         </li>
+                        <br />
                         <li className="text-white">
                           Invite our bot to your server.
                         </li>
+                        <br />
                         <li className="text-white">
                           Add your server in the Guild section.
                         </li>
+                        <br />
                         <li className="text-white">
                           Enable Discord status for your server in the actions
                           menu.
                         </li>
+                        <br />
                         <li className="text-white">
                           Submit and wait up to 5 minutes for the status to
                           update in the designated channel.

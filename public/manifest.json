@@ -3,12 +3,12 @@
   "name": "MCWatchdog",
   "icons": [
     {
-      "src": "logomodified.ico",
+      "src": "/images/statusdog.jpeg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logomodified.png",
+      "src": "/images/statusdog.jpeg",
       "type": "image/png",
       "sizes": "512x512"
     }

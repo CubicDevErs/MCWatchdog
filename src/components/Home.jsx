@@ -55,7 +55,7 @@ export default function Home() {
           <Col md={6} className="text-center">
             <div className="hero-img">
               <img
-                src="/statusdog.jpeg"
+                src="/images/statusdog.jpeg"
                 alt="banner no info doggy"
                 className="img-fluid"
               />
