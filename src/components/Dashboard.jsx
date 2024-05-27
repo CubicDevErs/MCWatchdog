@@ -23,6 +23,7 @@ export default function Dashboard() {
   const handleSettingShow = () => setShowSettingsModal(true);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -81,8 +82,10 @@ export default function Dashboard() {
       );
 
       setUserInfo(response.data.userInfo);
+      setIsLoading(false);
       localStorage.setItem("userInfo", JSON.stringify(response.data.userInfo));
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching user info:", error);
     }
   };
@@ -131,7 +134,7 @@ export default function Dashboard() {
                     },
                   }
                 )
-                .then((response) => {})
+                .then((response) => { })
                 .catch((error) => {
                   console.error("Error sending token:", error);
                 });
@@ -188,7 +191,7 @@ export default function Dashboard() {
       <CustomNavbar user={user} />
       <Container fluid className="mt-4">
         <Row>
-          <Col md={3}>
+        <Col md={3} style={{ marginBottom: '30px' }}>
             <div className="d-flex flex-column">
               <Button variant="dark" className="mb-2 custom-button">
                 <Link to="/servertracker" className="link">
@@ -234,123 +237,119 @@ export default function Dashboard() {
           </Col>
           <Col md={9}>
             <Row>
-              <Col md={6}>
-                <Card className="info-block">
-                  <Card.Body className="text-white">
-                    <Card.Title>Account status</Card.Title>
-                    <br />
-                    {userInfo ? (
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="info-element mb-4">
-                            <h6 className="text-white">Discord trackers</h6>
-                            <div className="progress">
-                              <div
-                                className="progress-bar progress-bar-striped bg-info"
-                                role="progressbar"
-                                style={{
-                                  width: `${
-                                    (userInfo.ActiveServersCount / 5) * 100
-                                  }%`,
-                                }}
-                                aria-valuenow={userInfo.ActiveServersCount}
-                                aria-valuemin="0"
-                                aria-valuemax="5"
-                              >
-                                {userInfo.ActiveServersCount} / 5
-                              </div>
-                            </div>
-                          </div>
-                          <div className="info-element mb-4">
-                            <h6 className="text-white">Server trackers</h6>
-                            <div className="progress">
-                              <div
-                                className="progress-bar progress-bar-striped bg-info"
-                                role="progressbar"
-                                style={{
-                                  width: `${
-                                    (userInfo.ServersDataCount / 5) * 100
-                                  }%`,
-                                }}
-                                aria-valuenow={userInfo.ServersDataCount}
-                                aria-valuemin="0"
-                                aria-valuemax="5"
-                              >
-                                {userInfo.ServersDataCount} / 5
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="info-element mb-4">
-                            <h6 className="text-white">Discord Linked</h6>
-                            <p>{userInfo.IsDiscordLinked ? "Yes" : "No"}</p>
-                          </div>
-                          <div className="info-element mb-4">
-                            <h6 className="text-white">Discord Guilds</h6>
-                            <p>{userInfo.DiscordDataCount}</p>
-                          </div>
-                          <div className="info-element mb-4">
-                            <h6 className="text-white">Premium Tier</h6>
-                            {renderPremiumTier(userInfo.PremiumMember)}
-                          </div>
-                          <div className="info-element mb-4">
-                            <h6 className="text-white">Notification Clients</h6>
-                            <p>{userInfo.FCMTokensCount}</p>
-                          </div>
-                        </div>
+              <Col md={3}>
+                <Card className="status-block">
+                  <Card.Body className="text-white d-flex flex-column justify-content-between align-items-center">
+                    {isLoading ? (
+                      <div className="spinner-border text-info" role="status">
+                        <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : (
-                      <p>Loading user info...</p>
+                      <>
+                      <Card.Text>Server Trackers</Card.Text>
+                          <div className="progress">
+                            <div
+                              className="progress-bar progress-bar-striped bg-success"
+                              role="progressbar"
+                              style={{ 
+                                width: `${(userInfo.ServersDataCount / 5) * 100
+                                  }%`,
+                              }}
+                              aria-valuenow={userInfo.ServersDataCount}
+                              aria-valuemin="0"
+                              aria-valuemax="5"
+                            >
+                              {userInfo.ServersDataCount} / 5
+                            </div>
+                          </div>
+                      </>
                     )}
                   </Card.Body>
                 </Card>
               </Col>
-
-              <Col md={6}>
-                <Card className="info-block text-start">
-                  <Card.Body>
-                    <Card.Title className="text-white text-center">
-                      MCWatchdog Premium
-                    </Card.Title>
-                    <br />
-                    <div className="info-section">
-                      <h5 style={{ color: "white", textAlign: "center" }}>
-                        Free Tier
-                      </h5>
-                      <p>
-                        You can have up to 2 server and Discord tracker with
-                        notification support.
-                      </p>
-                    </div>
-                    <div className="info-section">
-                      <h5 style={{ color: "white", textAlign: "center" }}>
-                        Server Tier
-                      </h5>
-                      <p>
-                        You can have up to 5 server trackers with each its own
-                        push notification.
-                      </p>
-                    </div>
-                    <div className="info-section">
-                      <h5 style={{ color: "white", textAlign: "center" }}>
-                        Discord Tier
-                      </h5>
-                      <p>
-                        You can have up to 5 Discord trackers with each its own
-                        DM notification.
-                      </p>
-                    </div>
-                    <div className="info-section">
-                      <h5 style={{ color: "white", textAlign: "center" }}>
-                        Watchdog Tier
-                      </h5>
-                      <p>Server Tier and Discord Tier combined.</p>
-                    </div>
+              <Col md={3}>
+                <Card className="status-block">
+                <Card.Body className="text-white d-flex flex-column justify-content-between align-items-center">
+                    {isLoading ? (
+                      <div className="spinner-border text-info" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    ) : (
+                      <>
+                      <Card.Text>Discord Tracker</Card.Text>
+                          <div className="progress">
+                            <div
+                              className="progress-bar progress-bar-striped bg-success"
+                              role="progressbar"
+                              style={{
+                                width: `${(userInfo.ActiveServersCount / 5) * 100
+                                  }%`,
+                              }}
+                              aria-valuenow={userInfo.ActiveServersCount}
+                              aria-valuemin="0"
+                              aria-valuemax="5"
+                            >
+                              {userInfo.ActiveServersCount} / 5
+                            </div>
+                          </div>
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={3}>
+                <Card className="status-block">
+                  <Card.Body className="text-white d-flex flex-column justify-content-start align-items-center">
+                    {isLoading ? (
+                      <div className="spinner-border text-info" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Card.Text>
+                        Subscription Tier:
+                        <br/>
+                          {renderPremiumTier(userInfo.PremiumMember)}</Card.Text>
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={3}>
+                <Card className="status-block">
+                  <Card.Body className="text-white d-flex flex-column justify-content-start align-items-center">
+                    {isLoading ? (
+                      <div className="spinner-border text-info" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Card.Text>Notification clients:
+                          <br/>
+                          <p>{userInfo.FCMTokensCount}</p>
+                        </Card.Text>
+                      </>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>
             </Row>
+
+
+
+            <Row className="mt-3">
+              <Col md={12}>
+                <Card className="info-block text-start">
+                  <Card.Body>
+                    <Card.Title className="text-white" style={{ color: "white", textAlign: "center" }}>
+                    Linear Scale
+                    </Card.Title>
+                    <Card.Text as="div">
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+              </Row>
             <Row className="mt-3">
               <Col md={6}>
                 <Card className="info-block text-start">
@@ -360,14 +359,14 @@ export default function Dashboard() {
                     </Card.Title>
                     <Card.Text as="div">
                       <ol>
-                      <br />
+                        <br />
                         <li className="text-white">
                           Navigate to Server Tracker click on add server.
                         </li>
                         <br />
                         <li className="text-white">
-                         For single minecraft server you can use your domain/IP + port.
-                         We also support query ping port.
+                          For single minecraft server you can use your domain/IP + port.
+                          We also support query ping port.
                         </li>
                         <br />
                         <li className="text-white">
@@ -391,7 +390,7 @@ export default function Dashboard() {
                     </Card.Title>
                     <Card.Text as="div">
                       <ol>
-                      <br />
+                        <br />
                         <li className="text-white">
                           Login to MCWatchdog and click "Link Discord".
                         </li>

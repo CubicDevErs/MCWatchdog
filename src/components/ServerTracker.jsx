@@ -5,7 +5,6 @@ import { Container, Row, Col, Button, Card, Alert, Spinner } from "react-bootstr
 import axios from "axios";
 import { app } from "../Firebase";
 import CustomNavbar from "./Navbar";
-import Footer from "./Footer";
 import AddServerModal from "./server_modals/AddServerModal";
 
 export default function Dashboard() {
@@ -284,7 +283,6 @@ export default function Dashboard() {
           handleSubmit={handleSubmit}
         />
       </Container>
-      <Footer />
     </div>
   );
 }

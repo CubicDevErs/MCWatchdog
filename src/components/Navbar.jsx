@@ -12,33 +12,19 @@ export default function CustomNavbar({ user }) {
 
   return (
     <Navbar expand="lg" style={{ color: "white" }}>
-      <Container>
-        <Navbar.Toggle
-          aria-controls="basic-navbar-nav"
-          className="navbar-dark"
-        />
+      <Container fluid>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" className="navbar-dark" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto w-100 flex-column flex-lg-row">
             <Nav.Link as={Link} to="/" style={{ color: "white" }}>
               Home
             </Nav.Link>
             {user && (
-              <>
-                <Nav.Link as={Link} to="/dashboard" style={{ color: "white" }}>
-                  Dashboard
-                </Nav.Link>
-              </>
+              <Nav.Link as={Link} to="/dashboard" style={{ color: "white" }}>
+                Dashboard
+              </Nav.Link>
             )}
-          </Nav>
-          {user && user.displayName && (
-            <>
-              <Navbar.Text className="me-3" style={{ color: "white" }}>
-                Signed in as: {user.displayName}
-              </Navbar.Text>
-            </>
-          )}
-          {!user && (
-            <>
+            {!user && (
               <Button
                 variant="success"
                 size="sm"
@@ -47,7 +33,14 @@ export default function CustomNavbar({ user }) {
               >
                 Login
               </Button>
-            </>
+            )}
+          </Nav>
+          {user && user.displayName && (
+            <div className="ml-auto">
+              <Navbar.Text className="me-3" style={{ color: "white" }}>
+                Signed in as: {user.displayName}
+              </Navbar.Text>
+            </div>
           )}
         </Navbar.Collapse>
       </Container>

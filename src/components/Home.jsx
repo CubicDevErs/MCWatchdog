@@ -63,7 +63,7 @@ export default function Home() {
           </Col>
         </Row>
       </Container>
-      <Container className="mt-5">
+      <Container className="mt-5 mb-3">
         {!isAndroid && !isIOS && (
           <Row className="justify-content-center">
             <Col md={6} className="text-center">

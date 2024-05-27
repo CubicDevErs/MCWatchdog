@@ -27,7 +27,7 @@ export default function TermsOfService() {
   return (
     <div>
       <CustomNavbar user={user} />
-      <Container className="mt-5 text-start">
+      <Container className="mt-5 mb-2 text-start">
         <h1>Terms of Service</h1>
         <p>Welcome to MCWatchdog!</p>
         <p>

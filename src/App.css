@@ -16,7 +16,7 @@ code {
 }
 
 #root {
-  max-width: 1280px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -25,7 +25,7 @@ code {
 
 .navbar {
   color: white !important;
-  border-radius: 15px !important;
+  border-radius: 10px !important;
   background: rgba(0, 0, 0, 0.2) !important;
 }
 
@@ -55,7 +55,7 @@ code {
 .minecraft-card {
   background-color: var(--background-color) !important;
   background: rgba(0, 0, 0, 0.4) !important;
-  border-radius: 15px !important;
+  border-radius: 10px !important;
   transition: box-shadow 0.25s !important;
   color: white !important;
 }
@@ -81,26 +81,22 @@ body {
   transition: filter 300ms;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
 .guild-card {
   background-color: var(--background-color) !important;
   background: rgba(0, 0, 0, 0.4) !important;
-  border-radius: 15px !important;
+  border-radius: 10px !important;
   transition: box-shadow 0.25s !important;
   color: white !important;
+}
+
+.custom-guild-card {
+  margin-bottom: 20px !important; /* Adjust the value as needed */
 }
 
 .server-card {
   background-color: var(--background-color) !important;
   background: rgba(0, 0, 0, 0.4) !important;
-  border-radius: 15px !important;
+  border-radius: 10px !important;
   transition: box-shadow 0.25s !important;
   color: white !important;
 }
@@ -127,22 +123,6 @@ input::placeholder {
 select {
   background: #4f4d4d !important;
   color: #fff !important;
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
 }
 
 .card {
@@ -182,6 +162,22 @@ select {
   margin-bottom: 30px;
 }
 
+.status-block {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  height: 100px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress {
+  width: 100%;
+}
+
 .info-block h3 {
   margin-bottom: 20px;
 }
@@ -218,7 +214,31 @@ select {
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
+.sidebar {
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
 .modal-content {
   background: linear-gradient(to bottom, rgb(60, 60, 60), rgb(28, 28, 28));
   color: #ffffff;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }

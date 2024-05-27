@@ -5,7 +5,6 @@ import { Container, Row, Col, Card, Button, Alert, Spinner } from "react-bootstr
 import axios from "axios";
 import { app } from "../Firebase";
 import CustomNavbar from "./Navbar";
-import Footer from "./Footer";
 import AddServerModal from "./discord_modals/AddServerModal";
 import EditServerModal from "./discord_modals/EditServerModal";
 import EnableStatusModal from "./discord_modals/EnableStatusModal";
@@ -312,7 +311,7 @@ export default function Dashboard() {
   return (
     <>
       <CustomNavbar user={user} />
-      <Container className="mt-5">
+      <Container className="mt-5 mb-2">
         <Row className="justify-content-center">
           <Col md={6} className="text-center">
             <h1>Discord tracker dashboard</h1>
@@ -494,7 +493,6 @@ export default function Dashboard() {
           </>
         )}
       </Container>
-      <Footer />
       <AddServerModal
         showModal={showModal}
         handleClose={() => setShowModal(false)}

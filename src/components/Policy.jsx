@@ -29,7 +29,7 @@ export default function Policy() {
   return (
     <div>
       <CustomNavbar user={user} />
-      <Container className="mt-5 text-start">
+      <Container className="mt-5 mb-2 text-start">
         <h1>Privacy Policy</h1>
         <p>Your privacy is important to us.</p>
         <p>
