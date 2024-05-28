@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Chart from 'chart.js/auto';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [chartInstance, setChartInstance] = useState(null);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -90,6 +92,102 @@ export default function Dashboard() {
     }
   };
 
+  // eslint-disable-next-line
+  useEffect(() => {
+    if (!user) return;
+    
+    const getPastMonthDates = () => {
+      const dates = [];
+      const currentDate = new Date();
+      for (let i = 29; i >= 0; i--) {
+        const pastDate = new Date(currentDate);
+        pastDate.setDate(currentDate.getDate() - i);
+        dates.push(pastDate.toISOString().split('T')[0]);
+      }
+      return dates;
+    };
+    
+    const fetchChartData = async () => {
+      try {
+        const response = await axios.get(`${host}/api/user/playerhistory/${user.email}`, {
+          headers: {
+            Authorization: user.uid,
+          },
+        });
+    
+        if (response.data.success) {
+          const serverData = response.data.data;
+          const labels = getPastMonthDates().map(date => new Date(date).toISOString().split('T')[0]);
+    
+          const colors = ['rgb(75, 192, 192)', 'rgb(255, 99, 132)', 'rgb(255, 205, 86)', 'rgb(54, 162, 235)', 'rgb(255, 255, 255)'];
+          const datasets = serverData.map((server, index) => ({
+            label: server.ServerName,
+            data: labels.map(date => {
+              const historyEntry = server.PlayerHistory.find(entry => entry.date === date);
+              return historyEntry ? historyEntry.maxPlayerCount : 0;
+            }),
+            fill: false,
+            borderColor: colors[index % colors.length],
+            tension: 0.1,
+          }));
+    
+          const data = {
+            labels,
+            datasets,
+          };
+    
+          const options = {
+            scales: {
+              x: {
+                type: 'category',
+                title: {
+                  display: true,
+                  text: 'Date',
+                },
+              },
+              y: {
+                type: 'linear',
+                title: {
+                  display: true,
+                  text: 'Players',
+                },
+                ticks: {
+                  stepSize: 500,
+                  min: 0,
+                  max: 5000,
+                },
+              },
+            },
+          };
+    
+          const ctx = document.getElementById('chart');
+          if (ctx) {
+            if (chartInstance) {
+              chartInstance.destroy();
+            }
+            const newChartInstance = new Chart(ctx, {
+              type: 'line',
+              data: data,
+              options: options,
+            });
+            setChartInstance(newChartInstance);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching player history:", error);
+      }
+    };
+    
+    fetchChartData();
+    
+    return () => {
+      const ctx = document.getElementById('chart');
+      if (ctx && chartInstance) {
+        chartInstance.destroy();
+      }
+    };
+  }, [user]);
+  
   const sendUserDataToBackend = async (firebaseUser) => {
     try {
       const { email, displayName, emailVerified, uid } = firebaseUser;
@@ -183,7 +281,7 @@ export default function Dashboard() {
       default:
         premiumTier = "Unknown";
     }
-    return <p>{premiumTier}</p>;
+    return premiumTier;
   };
 
   return (
@@ -191,7 +289,7 @@ export default function Dashboard() {
       <CustomNavbar user={user} />
       <Container fluid className="mt-4">
         <Row>
-        <Col md={3} style={{ marginBottom: '30px' }}>
+          <Col md={3} style={{ marginBottom: '30px' }}>
             <div className="d-flex flex-column">
               <Button variant="dark" className="mb-2 custom-button">
                 <Link to="/servertracker" className="link">
@@ -237,119 +335,95 @@ export default function Dashboard() {
           </Col>
           <Col md={9}>
             <Row>
-              <Col md={3}>
+              <Col md={6}>
                 <Card className="status-block">
-                  <Card.Body className="text-white d-flex flex-column justify-content-between align-items-center">
+                  <Card.Body className="text-white d-flex align-items-center justify-content-center">
+                    <div className="status-icon-container">
+                      <i className="status-icon bi bi-hdd-rack"></i>
+                    </div>
                     {isLoading ? (
                       <div className="spinner-border text-info" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : (
-                      <>
-                      <Card.Text>Server Trackers</Card.Text>
-                          <div className="progress">
-                            <div
-                              className="progress-bar progress-bar-striped bg-success"
-                              role="progressbar"
-                              style={{ 
-                                width: `${(userInfo.ServersDataCount / 5) * 100
-                                  }%`,
-                              }}
-                              aria-valuenow={userInfo.ServersDataCount}
-                              aria-valuemin="0"
-                              aria-valuemax="5"
-                            >
-                              {userInfo.ServersDataCount} / 5
-                            </div>
-                          </div>
-                      </>
+                      <div className="d-flex flex-column align-items-center">
+                        <Card.Title className="card-status-text status-count">{userInfo.ServersDataCount} / 5</Card.Title>
+                        <Card.Text className="card-status-text status-text">Trackers</Card.Text>
+                      </div>
                     )}
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={3}>
+              <Col md={6}>
                 <Card className="status-block">
-                <Card.Body className="text-white d-flex flex-column justify-content-between align-items-center">
+                  <Card.Body className="text-white d-flex align-items-center justify-content-center">
+                    <div className="status-icon-container">
+                      <i className="status-icon bi bi-discord"></i>
+                    </div>
                     {isLoading ? (
                       <div className="spinner-border text-info" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : (
-                      <>
-                      <Card.Text>Discord Tracker</Card.Text>
-                          <div className="progress">
-                            <div
-                              className="progress-bar progress-bar-striped bg-success"
-                              role="progressbar"
-                              style={{
-                                width: `${(userInfo.ActiveServersCount / 5) * 100
-                                  }%`,
-                              }}
-                              aria-valuenow={userInfo.ActiveServersCount}
-                              aria-valuemin="0"
-                              aria-valuemax="5"
-                            >
-                              {userInfo.ActiveServersCount} / 5
-                            </div>
-                          </div>
-                      </>
+                      <div className="d-flex flex-column align-items-center">
+                        <Card.Title className="card-status-text status-count">{userInfo.ActiveServersCount} / 5</Card.Title>
+                        <Card.Text className="card-status-text status-text">Trackers</Card.Text>
+                      </div>
                     )}
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={3}>
+              <Col md={6}>
                 <Card className="status-block">
-                  <Card.Body className="text-white d-flex flex-column justify-content-start align-items-center">
+                  <Card.Body className="text-white d-flex align-items-center justify-content-center">
+                    <div className="status-icon-container">
+                      <i className="status-icon bi bi-arrow-clockwise"></i>
+                    </div>
                     {isLoading ? (
                       <div className="spinner-border text-info" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : (
-                      <>
-                        <Card.Text>
-                        Subscription Tier:
-                        <br/>
-                          {renderPremiumTier(userInfo.PremiumMember)}</Card.Text>
-                      </>
+                      <div className="d-flex flex-column align-items-center">
+                        <Card.Title className="card-status-text status-count">{renderPremiumTier(userInfo.PremiumMember)}</Card.Title>
+                        <Card.Text className="card-status-text status-text">Subscription</Card.Text>
+                      </div>
                     )}
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={3}>
+              <Col md={6}>
                 <Card className="status-block">
-                  <Card.Body className="text-white d-flex flex-column justify-content-start align-items-center">
+                  <Card.Body className="text-white d-flex align-items-center justify-content-center">
+                    <div className="status-icon-container">
+                      <i className="status-icon bi bi-bell"></i>
+                    </div>
                     {isLoading ? (
                       <div className="spinner-border text-info" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : (
-                      <>
-                        <Card.Text>Notification clients:
-                          <br/>
-                          <p>{userInfo.FCMTokensCount}</p>
-                        </Card.Text>
-                      </>
+                      <div className="d-flex flex-column align-items-center">
+                        <Card.Title className="card-status-text status-count">{userInfo.FCMTokensCount}</Card.Title>
+                        <Card.Text className="card-status-text status-text">Notification</Card.Text>
+                      </div>
                     )}
                   </Card.Body>
                 </Card>
               </Col>
             </Row>
-
-
-
             <Row className="mt-3">
               <Col md={12}>
                 <Card className="info-block text-start">
                   <Card.Body>
                     <Card.Title className="text-white" style={{ color: "white", textAlign: "center" }}>
-                    Linear Scale
+                      Player count history
                     </Card.Title>
-                    <Card.Text as="div">
-                    </Card.Text>
+                    <canvas className="chart" id="chart" width="400" height="400"></canvas>
                   </Card.Body>
                 </Card>
               </Col>
-              </Row>
+            </Row>
             <Row className="mt-3">
               <Col md={6}>
                 <Card className="info-block text-start">

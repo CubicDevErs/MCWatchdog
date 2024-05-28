@@ -8,6 +8,7 @@ import TOS from "./components/TOS";
 import Policy from "./components/Policy";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import Dashboard from "./components/Dashboard";
 import Checkout from "./components/Checkout"
 import Verified from "./components/Verified"
