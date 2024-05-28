@@ -92,10 +92,9 @@ export default function Dashboard() {
     }
   };
 
-  // eslint-disable-next-line
   useEffect(() => {
-    if (!user) return;
-    
+    if (!user) return; 
+  
     const getPastMonthDates = () => {
       const dates = [];
       const currentDate = new Date();
@@ -106,7 +105,7 @@ export default function Dashboard() {
       }
       return dates;
     };
-    
+  
     const fetchChartData = async () => {
       try {
         const response = await axios.get(`${host}/api/user/playerhistory/${user.email}`, {
@@ -114,11 +113,11 @@ export default function Dashboard() {
             Authorization: user.uid,
           },
         });
-    
+  
         if (response.data.success) {
           const serverData = response.data.data;
           const labels = getPastMonthDates().map(date => new Date(date).toISOString().split('T')[0]);
-    
+  
           const colors = ['rgb(75, 192, 192)', 'rgb(255, 99, 132)', 'rgb(255, 205, 86)', 'rgb(54, 162, 235)', 'rgb(255, 255, 255)'];
           const datasets = serverData.map((server, index) => ({
             label: server.ServerName,
@@ -130,12 +129,12 @@ export default function Dashboard() {
             borderColor: colors[index % colors.length],
             tension: 0.1,
           }));
-    
+  
           const data = {
             labels,
             datasets,
           };
-    
+  
           const options = {
             scales: {
               x: {
@@ -159,12 +158,9 @@ export default function Dashboard() {
               },
             },
           };
-    
+  
           const ctx = document.getElementById('chart');
           if (ctx) {
-            if (chartInstance) {
-              chartInstance.destroy();
-            }
             const newChartInstance = new Chart(ctx, {
               type: 'line',
               data: data,
@@ -177,16 +173,16 @@ export default function Dashboard() {
         console.error("Error fetching player history:", error);
       }
     };
-    
+  
     fetchChartData();
-    
+  
     return () => {
       const ctx = document.getElementById('chart');
       if (ctx && chartInstance) {
         chartInstance.destroy();
       }
     };
-  }, [user]);
+  }, [user, chartInstance]); 
   
   const sendUserDataToBackend = async (firebaseUser) => {
     try {
