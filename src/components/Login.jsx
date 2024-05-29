@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { initializeFirebaseUI } from "./FirebaseAuth";
 import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Footer from "./Footer";
 
 export default function Login() {
   const isInitializedRef = useRef(false);
@@ -25,7 +24,6 @@ export default function Login() {
           </Col>
         </Row>
       </Container>
-      <Footer />
     </>
   );
 }

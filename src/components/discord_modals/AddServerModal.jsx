@@ -83,7 +83,7 @@ const AddServerModal = ({
               <option value="false">Disable</option>
             </Form.Control>
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button variant="secondary" type="submit" style={{ marginTop: "10px" }}>
             Add Server
           </Button>
         </Form>

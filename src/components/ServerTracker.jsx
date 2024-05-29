@@ -173,10 +173,9 @@ export default function Dashboard() {
       <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={12} className="text-center">
-          <h1>Server tracker dashboard</h1>
+          <h1>Server dashboard</h1>
           <Button
-            variant="primary"
-            className="ml-2"
+            variant="secondary"
             onClick={() => setShowModal(true)}
           >
             Add Server

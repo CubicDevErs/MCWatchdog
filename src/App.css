@@ -1,3 +1,8 @@
+:root {
+  --primary-color: #007bff;
+  --background-gradient: linear-gradient(to bottom, rgb(61, 7, 7), rgb(24, 14, 14));
+}
+
 html,
 body {
   height: 100%;
@@ -62,7 +67,7 @@ code {
 
 body {
   min-height: 100%;
-  background: linear-gradient(to bottom, rgb(60, 60, 60), rgb(28, 28, 28));
+  background: var(--background-gradient);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -224,7 +229,7 @@ select {
 }
 
 .modal-content {
-  background: linear-gradient(to bottom, rgb(60, 60, 60), rgb(28, 28, 28));
+  background: var(--background-gradient);
   color: #ffffff;
 }
 

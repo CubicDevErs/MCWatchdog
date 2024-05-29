@@ -5,9 +5,9 @@ import { app } from "../Firebase";
 import { getMessaging, getToken } from "firebase/messaging";
 import UpgradeAccountModal from "./dashboard_modal/UpgradeAccountModal";
 import SettingsModal from "./dashboard_modal/SettingsModal";
+import ServerSetupModal from "./dashboard_modal/GuidesModal";
 
 import { Link } from "react-router-dom";
-import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -20,12 +20,14 @@ export default function Dashboard() {
   const host = "https://backend.mcwatchdog.com";
   const [showModal, setShowModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showGuidesModal, setShowGuidesModal] = useState(false); 
+  const handleGuidesClose = () => setShowGuidesModal(false);
+  const handleGuidesShow = () => setShowGuidesModal(true);
   const handleSettingClose = () => setShowSettingsModal(false);
   const handleSettingShow = () => setShowSettingsModal(true);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [chartInstance, setChartInstance] = useState(null);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -93,8 +95,8 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (!user) return; 
-  
+    if (!user) return;
+
     const getPastMonthDates = () => {
       const dates = [];
       const currentDate = new Date();
@@ -105,7 +107,7 @@ export default function Dashboard() {
       }
       return dates;
     };
-  
+
     const fetchChartData = async () => {
       try {
         const response = await axios.get(`${host}/api/user/playerhistory/${user.email}`, {
@@ -113,11 +115,11 @@ export default function Dashboard() {
             Authorization: user.uid,
           },
         });
-  
+
         if (response.data.success) {
           const serverData = response.data.data;
           const labels = getPastMonthDates().map(date => new Date(date).toISOString().split('T')[0]);
-  
+
           const colors = ['rgb(75, 192, 192)', 'rgb(255, 99, 132)', 'rgb(255, 205, 86)', 'rgb(54, 162, 235)', 'rgb(255, 255, 255)'];
           const datasets = serverData.map((server, index) => ({
             label: server.ServerName,
@@ -129,12 +131,12 @@ export default function Dashboard() {
             borderColor: colors[index % colors.length],
             tension: 0.1,
           }));
-  
+
           const data = {
             labels,
             datasets,
           };
-  
+
           const options = {
             scales: {
               x: {
@@ -158,31 +160,34 @@ export default function Dashboard() {
               },
             },
           };
-  
+
           const ctx = document.getElementById('chart');
           if (ctx) {
-            const newChartInstance = new Chart(ctx, {
+            new Chart(ctx, {
               type: 'line',
               data: data,
               options: options,
             });
-            setChartInstance(newChartInstance);
           }
         }
       } catch (error) {
         console.error("Error fetching player history:", error);
       }
     };
-  
+
     fetchChartData();
-  
+
     return () => {
+      // Cleanup function
       const ctx = document.getElementById('chart');
-      if (ctx && chartInstance) {
-        chartInstance.destroy();
+      if (ctx) {
+        const chartInstance = Chart.getChart(ctx);
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
       }
     };
-  }, [user, chartInstance]); 
+  }, [user]); 
   
   const sendUserDataToBackend = async (firebaseUser) => {
     try {
@@ -289,12 +294,27 @@ export default function Dashboard() {
             <div className="d-flex flex-column">
               <Button variant="dark" className="mb-2 custom-button">
                 <Link to="/servertracker" className="link">
-                  Server tracker
+                  Servers Dashboard
                 </Link>
               </Button>
               <Button variant="dark" className="mb-2 custom-button">
                 <Link to="/discordtracker" className="link">
-                  Discord tracker
+                  Discord Dashboard
+                </Link>
+              </Button>
+              <Button
+                variant="dark"
+                className="mb-2 custom-button"
+                onClick={handleGuidesShow}
+              >
+                Setup guides
+              </Button>
+              <Button variant="dark" className="mb-2 custom-button">
+                <Link
+                  to="https://discord.com/oauth2/authorize?client_id=1209287940056813628&redirect_uri=https%3A%2F%2Fmcwatchdog.com&permissions=2147502080&scope=bot"
+                  className="link"
+                >
+                  MCWatchdog bot invite
                 </Link>
               </Button>
               <Button
@@ -304,21 +324,12 @@ export default function Dashboard() {
               >
                 Upgrade account
               </Button>
-
-              <Button variant="dark" className="mb-2 custom-button">
-                <Link
-                  to="https://discord.com/oauth2/authorize?client_id=1209287940056813628&redirect_uri=https%3A%2F%2Fmcwatchdog.com&permissions=2147502080&scope=bot"
-                  className="link"
-                >
-                  Discord bot invite
-                </Link>
-              </Button>
               <Button
                 variant="dark"
                 className="mb-2 custom-button"
                 onClick={handleSettingShow}
               >
-                Settings
+                Account Settings
               </Button>
               <Button
                 variant="dark"
@@ -420,79 +431,6 @@ export default function Dashboard() {
                 </Card>
               </Col>
             </Row>
-            <Row className="mt-3">
-              <Col md={6}>
-                <Card className="info-block text-start">
-                  <Card.Body>
-                    <Card.Title className="text-white" style={{ color: "white", textAlign: "center" }}>
-                      Setup server trackers
-                    </Card.Title>
-                    <Card.Text as="div">
-                      <ol>
-                        <br />
-                        <li className="text-white">
-                          Navigate to Server Tracker click on add server.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          For single minecraft server you can use your domain/IP + port.
-                          We also support query ping port.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          For proxy setups we recommend to open the query port, with this you can track all your backend servers.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          Our system will automatically push a notification to all clients where mcwatchdog was opened.
-                          To deactivate notifications you can simply disable them on your browser or app settings.
-                        </li>
-                      </ol>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={6}>
-                <Card className="info-block text-start">
-                  <Card.Body>
-                    <Card.Title className="text-white" style={{ color: "white", textAlign: "center" }}>
-                      Setup Discord trackers
-                    </Card.Title>
-                    <Card.Text as="div">
-                      <ol>
-                        <br />
-                        <li className="text-white">
-                          Login to MCWatchdog and click "Link Discord".
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          Link your Discord account to MCWatchdog. Use{" "}
-                          <code>/link</code> if you've already invited the bot.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          Invite our bot to your server.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          Add your server in the Guild section.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          Enable Discord status for your server in the actions
-                          menu.
-                        </li>
-                        <br />
-                        <li className="text-white">
-                          Submit and wait up to 5 minutes for the status to
-                          update in the designated channel.
-                        </li>
-                      </ol>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
           </Col>
         </Row>
       </Container>
@@ -501,7 +439,7 @@ export default function Dashboard() {
         showModal={showSettingsModal}
         handleClose={handleSettingClose}
       />
-      <Footer />
+      <ServerSetupModal showModal={showGuidesModal} handleClose={handleGuidesClose} />
     </div>
   );
 }

@@ -314,7 +314,7 @@ export default function Dashboard() {
       <Container className="mt-5 mb-2">
         <Row className="justify-content-center">
           <Col md={6} className="text-center">
-            <h1>Discord tracker dashboard</h1>
+            <h1>Discord dashboard</h1>
           </Col>
         </Row>
         {loading ? (
@@ -466,7 +466,7 @@ export default function Dashboard() {
                               <p>No servers found for this guild.</p>
                             )}
                             <Button
-                              variant="primary"
+                              variant="secondary"
                               onClick={() => {
                                 setShowModal(true);
                                 setFormData({ ...formData, guildId: guild.id });

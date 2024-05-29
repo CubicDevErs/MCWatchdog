@@ -5,7 +5,6 @@ import { Container, Card, Spinner } from "react-bootstrap";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../Firebase";
 import CustomNavbar from "./Navbar";
-import Footer from "./Footer";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -100,7 +99,6 @@ export default function Checkout() {
           </Card.Body>
         </Card>
       </Container>
-      <Footer />
     </div>
   );
 }

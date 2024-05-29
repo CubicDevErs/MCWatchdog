@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, } from "react-bootstrap";
-import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 
 export default function Verified() {
@@ -59,7 +58,6 @@ export default function Verified() {
           </Card.Body>
         </Card>
       </Container>
-      <Footer />
     </div>
   );
 }

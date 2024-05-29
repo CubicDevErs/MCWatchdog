@@ -10,24 +10,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Dashboard from "./components/Dashboard";
-import Checkout from "./components/Checkout"
-import Verified from "./components/Verified"
+import Checkout from "./components/Checkout";
+import Verified from "./components/Verified";
+import CookieConsentNotice from './components/CookieConsentNotice'
 
 function App() {
   return (
     <HashRouter>
-      <Routes>
-        <Route path="/" element={<Navigate replace to="/home" />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/servertracker" element={<Servertracker />} />
-        <Route path="/discordtracker" element={<Discordtracker />} />
-        <Route path="/tos" element={<TOS />} />
-        <Route path="/policy" element={<Policy />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/verified" element={<Verified />} />
-      </Routes>
+      <div>
+        <CookieConsentNotice />
+        <Routes>
+          <Route path="/" element={<Navigate replace to="/home" />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/servertracker" element={<Servertracker />} />
+          <Route path="/discordtracker" element={<Discordtracker />} />
+          <Route path="/tos" element={<TOS />} />
+          <Route path="/policy" element={<Policy />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/verified" element={<Verified />} />
+        </Routes>
+      </div>
     </HashRouter>
   );
 }

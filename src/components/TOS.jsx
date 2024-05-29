@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Footer from "./Footer";
 import CustomNavbar from "./Navbar";
 
 export default function TermsOfService() {
@@ -84,7 +83,6 @@ export default function TermsOfService() {
           jurisdiction of the courts in that State or location.
         </p>
       </Container>
-      <Footer />
     </div>
   );
 }
