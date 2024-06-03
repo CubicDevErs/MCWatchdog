@@ -84,6 +84,30 @@ export default function Dashboard() {
     };
   }, [navigate]);
 
+  // Function to handle Discord re-authentication
+  const openDiscordAuthPopup = () => {
+    const firebaseUser = getAuth(app).currentUser;
+    if (firebaseUser) {
+      const state = encodeURIComponent(firebaseUser.email);
+      const url = `https://discord.com/oauth2/authorize?client_id=1209287940056813628&response_type=code&redirect_uri=https%3A%2F%2Fbackend.mcwatchdog.com%2Fdiscord%2Fauth%2Fredirect&scope=identify+guilds+guilds.join+email&state=${state}`;
+      window.location.href = url;
+    } else {
+      console.error("Firebase user not found");
+    }
+  };
+
+  // Axios interceptor to handle 401 errors globally
+  axios.interceptors.response.use(
+    response => response,
+    async (error) => {
+      if (error.response && error.response.status === 401) {
+        console.log("Discord authentication required. Redirecting to Discord authentication.");
+        openDiscordAuthPopup();
+      }
+      return Promise.reject(error);
+    }
+  );
+
   const loadGuilds = async (email) => {
     const storedUser = JSON.parse(sessionStorage.getItem("user"));
 
@@ -120,17 +144,6 @@ export default function Dashboard() {
       setDiscordChannels(response.data);
     } catch (error) {
       console.error("Error fetching Discord channels:", error);
-    }
-  };
-
-  const openDiscordAuthPopup = () => {
-    const firebaseUser = getAuth(app).currentUser;
-    if (firebaseUser) {
-      const state = encodeURIComponent(firebaseUser.email);
-      const url = `https://discord.com/oauth2/authorize?client_id=1209287940056813628&response_type=code&redirect_uri=https%3A%2F%2Fbackend.mcwatchdog.com%2Fdiscord%2Fauth%2Fredirect&scope=identify+guilds+guilds.join+email&state=${state}`;
-      window.location.href = url;
-    } else {
-      console.error("Firebase user not found");
     }
   };
 
@@ -270,19 +283,19 @@ export default function Dashboard() {
 
   const handleEnableStatusSubmit = async (e) => {
     const storedUser = JSON.parse(sessionStorage.getItem("user"));
-  
+
     e.preventDefault();
     try {
       const selectedChannelId = formData.discordChannel;
       const selectedChannel = discordChannels.find(
         (channel) => channel.id === selectedChannelId
       );
-  
+
       if (!selectedChannel) {
         setError("Please select a channel.");
         return;
       }
-  
+
       await axios.post(
         `${host}/api/discord/server/status/enable/${user.email}/${formData.guildId}/${formData.serverName}/${selectedChannel.id}`,
         {},
@@ -292,7 +305,7 @@ export default function Dashboard() {
           },
         }
       );
-  
+
       setSuccess("Discord status enabled successfully.");
       setShowEnableStatusModal(false);
       setFormData({ ...formData, discordChannel: "" });
@@ -306,8 +319,8 @@ export default function Dashboard() {
       }
       setShowEnableStatusModal(false);
     }
-  };  
-  
+  };
+
   return (
     <>
       <CustomNavbar user={user} />
